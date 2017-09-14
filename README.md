@@ -199,51 +199,13 @@ Récupérez le fichier Hit.
 ##### Instructions
 Avant d'aller plus loin, il va falloir doter notre `Board` d'une méthode lui permettant de recevoir les frappes de l'adversaire, et qui permettra à l'adversaire de recevoir les nôtres :
 
-```java
-enum Hit {
-		MISS(-1, "manqué"),
-		STIKE(-2, "touché"),
-		DESTROYER(2, "Frégate"),
-		SUBMARINE(3, "Sous-marin"),
-		BATTLESHIP(4, "Croiseur"),
-		CARRIER(5, "Porte-avion")
-		;
-		private int value;
-		private String label;
-		Hit(int value, String label) {
-			this.value = value;
-			this.label = label;
-		}
-
-		public static Hit fromInt(int value) {
-			for (Hit hit : Hit.values()) {
-				if (hit.value == value) {
-					return hit;
-				}
-			}
-			throw new NoSuchElementException("no enum for value " + value);
-		}
-
-		public String getLabel() {
-			return this.label;
-		}
-	};
-/**
- * Sends a hit at the given position
- * @param x
- * @param y
- * @return status for the hit (eg : strike or miss)
- */
-Hit sendHit(int x, int y);
-```
-L'adversaire appelera donc la méthode `sendHit()` sur notre `Board`, tandis que nous appelerons `sendHit()` sur le siens.
+L'adversaire appelera donc la méthode `sendHit()` sur notre `Board`, tandis que nous appelerons `sendHit()` sur le sien.
 L'enum `Hit` permet de renvoyer le status d'une frappe lancée. Les valeurs peuvent être **`MISS`** ou **`STRUCK`**, pour une frappe manquée ou réussie, ou bien le nom d'un des 4 navires lorsqu'un navire viens d'être coulé totalement.
 
 >  NB : L'enum `Hit` est particulier : Il possède un constructeur, ce qui nous permet de lui faire porter des valeur. Cela sera pratique lorsque nous voudrons créer l'enum directement à partir de la longueur du navire, grace à la méthode `fromInt()`, ou lorsque nous voudrons avoir le nom ("label") du navire détruit)
 
 Travail demandé :
- - Copier coller le code ci dessus dans `IBoard`, puis l'implémenter dans `Board`.
- - Implémenter la méthode `sendHit()` en prenant soin de retourner la bonne valeur si un navire est détruit.
+ - Modifiez la méthode `sendHit()` en prenant soin de retourner la bonne valeur si un navire est détruit.
  - Modifier la classe `Main` pour envoyer des frappes sur l'unique destroyer de votre board. Vérifier que le destroyer s'affiche en rouge.
  - Vérifier que `destroyer.isSunk()` retourne *vrai*, et que le dernier appel à `sendHit()` retourne **`Hit.DESTROYER`**. Afficher *coulé* le cas échéant.
 
@@ -269,14 +231,14 @@ La classe `BattleShipsAI` vous est fournie. Elle propose une Intelligence Artifi
 
 > NB : Notez que BattleShipsAI a besoin de deux objets `Board` (un par joueur) pour fonctionner. Votre `Board` implémente l'interface `IBoard`, ce qui permet à `BattleShipsAI` de savoir comment interagir avec votre Board, sans en connaitre les détails d'implémentation. `IBoard` est en quelque sorte le "Manuel d'utilisation" d'un objet `Board` (On parle de *contrat*).
 
-Pour tester le placement des navires, nous allons faire jouer l'IA contre elle même sur un seul Board. Ecrire une classe `TestGame` et sa fonction main(), qui devra :
+Pour tester le placement des navires, nous allons faire jouer l'IA contre elle même sur un seul Board. Modifiez la classe `Main`. Elle devra :
  - initialiser un objet `Board` et l'afficher
  - initialiser une liste de navires. Notez qu'un simple tableau pourrait suffire, mais les listes s'avèrerons utiles plus tard dans la partie Bonus.
  - initialiser un objet **ai** de type `BattleShipsAI`, qui utilise le même `Board` pour la grille amie et adverse.
  - créer un compteur qui compte le nombres de navires détruits.
  - tant qu'il reste des navires,
     -  appeler la méthode `ai.sendHit()`
-    -  afficher les coordonnées du hit et sont résultat (*touché* ou *manqué*, ou *XXX coulé*). La méthode `IBoard.Hit.getLabel()` vous sera utile.
+    -  afficher les coordonnées du hit et sont résultat (*touché* ou *manqué*, ou *XXX coulé*). La méthode `Hit.getLabel()` vous sera utile.
     -  afficher le nouvel état du board
 
 Vous pouvez utiliser la méthode `sleep(int ms)` suivante pour temporiser la boucle de jeu :
@@ -292,7 +254,7 @@ private static void sleep(int ms) {
 
 Travail à faire :
  - Compléter `putShips()` dans `BattleShipsAI` (utiliser un `java.util.Random`)
- - Ecrire une classe `TestGame`
+ - Modifier la classe `Main`
 
 >  NB : Vous remarquerez que `List` utilise une syntaxe avec des chevrons (<>). C'est ce qu'on appelles un **`Generic`** (équivallent des *templates* en c++). C'est un paramètre qui indique que les éléments contenus dans la liste serons du type passé entre chevrons.
 
